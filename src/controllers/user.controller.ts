@@ -17,7 +17,6 @@ export async function createUser(req: Request, res: Response): Promise<Response>
         // new user.
         const newUser = {
             uname: uname,
-            pswd: pswd,
             email: email
         }
 
@@ -49,8 +48,12 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
     }
     else {
         if(user_compr.pswd===pswd){
+            const newUser={
+                uname:uname
+            }
+            const user = new User (newUser);
             res.status(201);
-            return res.json(user_compr.toJSON());
+            return res.json(user.toJSON());
         }
          res.status(404);
          return res.json({
