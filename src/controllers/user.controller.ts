@@ -8,7 +8,7 @@ export async function createUser(req: Request, res: Response): Promise<Response>
     const {uname, pswd, email} = req.body; // grab the fields from the POST request body
 
     console.log("new user creation petition for user ", uname);
-    console.log("searching...")
+    console.log("searching...");
     const user_compr = await User.findOne({'uname': uname});
 
     if(!user_compr){
@@ -33,6 +33,29 @@ export async function createUser(req: Request, res: Response): Promise<Response>
         return res.json({
             message: 'Could not create user',
         });
+    }
+}
+export async function logIn(req:Request, res:Response):Promise<Response>{
+    const {uname, pswd} = req.body;
+    console.log("log in petition for user ", uname);
+    console.log("searching...");
+    const user_compr=await User.findOne({'uname':uname});
+    if(!user_compr){
+        console.log("no coincidences found");
+        res.status(404);
+        return res.json({
+            message:'User does not exist',
+        });
+    }
+    else {
+        if(user_compr.pswd===pswd){
+            res.status(201);
+            return res.json(user_compr.toJSON());
+        }
+         res.status(404);
+         return res.json({
+         message:'Password does not match',
+       });
     }
 }
 
