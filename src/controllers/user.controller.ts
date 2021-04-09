@@ -5,7 +5,7 @@ import User from '../models/User';
 
 // CALL TO CREATE A USER
 export async function createUser(req: Request, res: Response): Promise<Response> {
-    const {uname, pswd, email} = req.body; // grab the fields from the POST request body
+    const {uname, pswd, email, fullname} = req.body; // grab the fields from the POST request body
 
     console.log("new user creation petition for user ", uname);
     console.log("searching...")
@@ -18,7 +18,8 @@ export async function createUser(req: Request, res: Response): Promise<Response>
         const newUser = {
             uname: uname,
             pswd: pswd,
-            email: email
+            email: email,
+            fullname: fullname
         }
 
         // create a user model and save it

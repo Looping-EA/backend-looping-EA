@@ -7,7 +7,8 @@ import {Schema, model, Document} from 'mongoose';
 const schema = new Schema({
     uname: String,
     pswd: String,
-    email: String
+    email: String,
+    fullname: String
 });
 
 // create an interface that contains all
@@ -18,7 +19,8 @@ const schema = new Schema({
 interface IUser extends Document {
     uname: String;
     pswd: String;
-    email: String
+    email: String;
+    fullname: String;
 }
 
 export default model<IUser>('User', schema); // EXPORT THE MODEL
