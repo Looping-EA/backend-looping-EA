@@ -17,13 +17,9 @@ export async function createUser(req: Request, res: Response): Promise<Response>
         // new user.
         const newUser = {
             uname: uname,
-<<<<<<< HEAD
             pswd: pswd,
             email: email,
             fullname: fullname
-=======
-            email: email
->>>>>>> 945759418a8e33f5050047e22fd88dc10e67dffd
         }
 
         // create a user model and save it
