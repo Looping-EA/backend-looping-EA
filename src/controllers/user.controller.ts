@@ -37,7 +37,7 @@ export async function createUser(req: Request, res: Response): Promise<Response>
     }
 }
 export async function logIn(req:Request, res:Response):Promise<Response>{
-    const {uname, pswd} = req.body;
+    const {uname, pswd, email, fullname} = req.body;
     console.log("log in petition for user ", uname);
     console.log("searching...");
     const user_compr=await User.findOne({'uname':uname});
@@ -87,16 +87,12 @@ export async function getUser(res: Response, req: Request) : Promise <Response>{
 
     return res;
 }
-export async function getAllUsers(res:Response, req:Request):Promise <Response>{
-    const users = await User.find({});
-    if(!users){
-        return res.status(404).json({
-            message:'could not find users',
-        });
-    } else {
-         return res.status(200).json(users);
-    }
+export async function getUsers(req: Request, res: Response) {
+    //Hacemos una lista de los usuarios
+    let users = await User.find();
+    res.status(201).json(users);
 }
+
 export async function deleteUser(req: Request, res:Response):Promise<Response>{
     const{uname}=req.body;
     const check = await User.findOne({'uname':uname});
