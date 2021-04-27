@@ -37,7 +37,7 @@ export async function createUser(req: Request, res: Response): Promise<Response>
     }
 }
 export async function logIn(req:Request, res:Response):Promise<Response>{
-    const {uname, pswd, email, fullname} = req.body;
+    const {uname, pswd} = req.body;
     console.log("log in petition for user ", uname);
     console.log("searching...");
     const user_compr=await User.findOne({'uname':uname});
