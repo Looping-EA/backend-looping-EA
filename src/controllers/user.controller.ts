@@ -87,3 +87,29 @@ export async function getUser(res: Response, req: Request) : Promise <Response>{
 
     return res;
 }
+export async function getAllUsers(res:Response, req:Request):Promise <Response>{
+    const users = await User.find({});
+    if(!users){
+        return res.status(404).json({
+            message:'could not find users',
+        });
+    } else {
+         return res.status(200).json(users);
+    }
+}
+export async function deleteUser(req: Request, res:Response):Promise<Response>{
+    const{uname}=req.body;
+    const check = await User.findOne({'uname':uname});
+    if(!check){
+        console.log("user does not exist");
+        return res.status(404).json({
+            message:'user not deleted since it does not exist',
+        });
+    }
+    else{
+        await User.deleteOne({'uname':uname});
+        console.log("user deleted");
+        return res.status(201).json(check.toJSON());
+    }
+}
+
