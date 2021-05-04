@@ -50,4 +50,4 @@ export interface IProjects extends Document {
     owners: IUser['_id'];
 }
 
-export default model<IProjects>('Projects', schema); // EXPORT THE MODEL
+export default model<IProjects>('Project', schema); // EXPORT THE MODEL

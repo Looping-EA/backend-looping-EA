@@ -1,7 +1,7 @@
 // User model
 // You can copy this file and modify it to create the other ones
 import {Schema, model, Document} from 'mongoose';
-import Projects, { IProjects } from './Projects';
+import Project, { IProjects } from './Project';
 
 // Create a schema based on discussed
 // user model:
