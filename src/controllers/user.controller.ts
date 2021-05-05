@@ -5,10 +5,10 @@ import User from '../models/User';
 
 // CALL TO CREATE A USER
 export async function createUser(req: Request, res: Response): Promise<Response> {
-    const {uname, pswd, email} = req.body; // grab the fields from the POST request body
+    const {uname, pswd, email, fullname} = req.body; // grab the fields from the POST request body
 
     console.log("new user creation petition for user ", uname);
-    console.log("searching...")
+    console.log("searching...");
     const user_compr = await User.findOne({'uname': uname});
 
     if(!user_compr){
@@ -18,7 +18,8 @@ export async function createUser(req: Request, res: Response): Promise<Response>
         const newUser = {
             uname: uname,
             pswd: pswd,
-            email: email
+            email: email,
+            fullname: fullname
         }
 
         // create a user model and save it
@@ -33,6 +34,33 @@ export async function createUser(req: Request, res: Response): Promise<Response>
         return res.json({
             message: 'Could not create user',
         });
+    }
+}
+export async function logIn(req:Request, res:Response):Promise<Response>{
+    const {uname, pswd} = req.body;
+    console.log("log in petition for user ", uname);
+    console.log("searching...");
+    const user_compr=await User.findOne({'uname':uname});
+    if(!user_compr){
+        console.log("no coincidences found");
+        res.status(404);
+        return res.json({
+            message:'User does not exist',
+        });
+    }
+    else {
+        if(user_compr.pswd===pswd){
+            const newUser={
+                uname:uname
+            }
+            const user = new User (newUser);
+            res.status(201);
+            return res.json(user.toJSON());
+        }
+         res.status(404);
+         return res.json({
+         message:'Password does not match',
+       });
     }
 }
 
@@ -59,3 +87,25 @@ export async function getUser(res: Response, req: Request) : Promise <Response>{
 
     return res;
 }
+export async function getUsers(req: Request, res: Response) {
+    //Hacemos una lista de los usuarios
+    let users = await User.find();
+    res.status(201).json(users);
+}
+
+export async function deleteUser(req: Request, res:Response):Promise<Response>{
+    const{uname}=req.body;
+    const check = await User.findOne({'uname':uname});
+    if(!check){
+        console.log("user does not exist");
+        return res.status(404).json({
+            message:'user not deleted since it does not exist',
+        });
+    }
+    else{
+        await User.deleteOne({'uname':uname});
+        console.log("user deleted");
+        return res.status(201).json(check.toJSON());
+    }
+}
+
