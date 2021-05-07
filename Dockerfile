@@ -3,14 +3,14 @@ FROM node:14.16
 # SET UP THE WORKING BACKEND
 WORKDIR /usr/src/app
 
-# COPY THE DEPENDENCIES
-COPY package*.json ./
+# COPY ALL
+COPY . /usr/src/app
 
-# INSTALL THEM
+# INSTALL DEPENDENCIES
 RUN npm install
 
-# DIST (as the compiled backend)
-RUN mkdir /usr/src/app/dist
-COPY dist /usr/src/app/dist
+# BUILD
+CMD ["npm", "run-script build"]
 
+# EXECUTE THE SERVER
 CMD ["node", "dist/index.js"]
