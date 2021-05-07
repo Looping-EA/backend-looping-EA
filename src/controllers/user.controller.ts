@@ -109,3 +109,13 @@ export async function deleteUser(req: Request, res:Response):Promise<Response>{
     }
 }
 
+export async function findUsersById(req:Request, res:Response):Promise<Response>{
+    let{ids}=req.body;
+    let users = new Array();
+    ids.forEach (async (element: any) => users.push(await User.findById(element)));
+    return res.status(201).json(users);
+
+    }
+    
+
+
