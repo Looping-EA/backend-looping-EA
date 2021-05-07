@@ -6,14 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "npm run-script build && nodejs ./dist/index.js"
+    "start": "npm run-script build && node ./dist/index.js"
   },
   "author": "Group 5",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.12.3",
+    "mongoose": "^5.12.5",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
