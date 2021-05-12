@@ -2,7 +2,7 @@
 // entry point for user related stuff
 
 import {Router} from 'express';
-import { createUser, deleteUser, getUser, logIn, getUsers } from '../controllers/user.controller';
+import { createUser, deleteUser, getUser, logIn, getUsers, findUsersById } from '../controllers/user.controller';
 
 // Accomodate the routes at user_routes
 const user_router = Router();
@@ -22,4 +22,6 @@ user_router.route('/users/delete') //API Endpoint for existen users
 user_router.route('/users/') //API Endpoint for Registering a user
     .post(getUsers) // CREATE the user JSON object
 
+user_router.route('/users/ids')
+    .post(findUsersById)
 export default user_router; // EXPORT THE ROUTES

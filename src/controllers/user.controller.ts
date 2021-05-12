@@ -51,7 +51,9 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
     else {
         if(user_compr.pswd===pswd){
             const newUser={
-                uname:uname
+                uname: user_compr.uname,
+                fullname: user_compr.fullname,
+                email: user_compr.email
             }
             const user = new User (newUser);
             res.status(201);
@@ -65,7 +67,7 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
 }
 
 // CALL TO GET A USER
-export async function getUser(res: Response, req: Request) : Promise <Response>{
+export async function getUser(req: Request, res: Response) : Promise <Response>{
     // REQUEST user uname
     const uname = req.params.uname;
 
@@ -75,17 +77,13 @@ export async function getUser(res: Response, req: Request) : Promise <Response>{
 
     if(!user){
         // user does NOT exist
-        res.status(404);
-        res.json({
+        return res.json({
             message: 'could not find user',
-        });
+        }).status(404);
     } else {
         // user does exist
-        res.status(200);
-        res.json(user.toJSON());
+        return res.json(user.toJSON()).status(200);
     }
-
-    return res;
 }
 export async function getUsers(req: Request, res: Response) {
     //Hacemos una lista de los usuarios
@@ -96,6 +94,7 @@ export async function getUsers(req: Request, res: Response) {
 export async function deleteUser(req: Request, res:Response):Promise<Response>{
     const{uname}=req.body;
     const check = await User.findOne({'uname':uname});
+
     if(!check){
         console.log("user does not exist");
         return res.status(404).json({
@@ -108,4 +107,14 @@ export async function deleteUser(req: Request, res:Response):Promise<Response>{
         return res.status(201).json(check.toJSON());
     }
 }
+
+export async function findUsersById(req:Request, res:Response):Promise<Response>{
+    let{ids}=req.body;
+    let users = new Array();
+    ids.forEach (async (element: any) => users.push(await User.findById(element)));
+    return res.status(201).json(users);
+
+    }
+    
+
 
