@@ -1,0 +1,10 @@
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+    "uname":"MaFe14",
+    "pswd":"12345678"
+}
+###
+GET http://localhost:8080/api/users/MaFe14
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWNvbWVuZGF0aW9ucyI6W10sInByb2plY3RzT3duZWQiOltdLCJwcm9qZWN0c1BhcnRpY2lwYW50cyI6W10sIl9pZCI6IjYwYTk0ZWJkZTk5ZDg4NTcxOGZmYjU0MSIsInVuYW1lIjoiTWFGZTE0IiwiZnVsbG5hbWUiOiJtYXJjIGZlcnJlIiwiZW1haWwiOiJtYXJjQGdtYWlsLmNvbSIsImlhdCI6MTYyMTcwODQ3N30.RC8_JLsj4c0usFXdt3bzuPWHBG6PCJG3HJjM2K20xeY

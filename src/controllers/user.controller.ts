@@ -2,6 +2,8 @@
 // important functions for the user service
 import {Request, Response} from 'express';
 import User from '../models/User';
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 // CALL TO CREATE A USER
 export async function createUser(req: Request, res: Response): Promise<Response> {
@@ -25,9 +27,9 @@ export async function createUser(req: Request, res: Response): Promise<Response>
         // create a user model and save it
         const user = new User (newUser);
         await user.save();
-        
         res.status(201);
-        return res.json(user.toJSON()); // Promises need to return something
+        const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
+        return res.json({accessToken: accessToken}); // Promises need to return something
     } else {
         console.log("user already exists");
         res.status(401);
@@ -56,8 +58,9 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
                 email: user_compr.email
             }
             const user = new User (newUser);
+            const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
             res.status(201);
-            return res.json(user.toJSON());
+            return res.json({accessToken: accessToken});
         }
          res.status(404);
          return res.json({
@@ -114,7 +117,7 @@ export async function findUsersById(req:Request, res:Response):Promise<Response>
     ids.forEach (async (element: any) => users.push(await User.findById(element)));
     return res.status(201).json(users);
 
-    }
+}
+
     
-
-
+    
