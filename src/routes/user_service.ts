@@ -19,9 +19,9 @@ user_router.get('/users/:uname', authenticateToken, (req,res)=>{
 }) //API Endpoint for existen users
   // GET the user with username = uname
 
-user_router.post('/users/delete', auth, (req,res)=>{
-    res.json(deleteUser);
-}) //API Endpoint for existen users
+user_router.route('/users/delete') 
+.post(authenticateToken, deleteUser)
+ //API Endpoint for existen users
  // DELETE the user with username = uname
 
 user_router.route('/users/')
@@ -29,9 +29,10 @@ user_router.route('/users/')
  //API Endpoint for Registering a user
      // CREATE the user JSON object
 
-user_router.post('/users/ids', auth, (req,res)=>{
-    res.json(findUsersById);
-})
+user_router.route('/users/ids')
+    .post(authenticateToken, findUsersById)
+
+
 function authenticateToken (req, res, next){
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1];
@@ -44,7 +45,5 @@ function authenticateToken (req, res, next){
       next();
     })
   }
-
-
 
 export default user_router; // EXPORT THE ROUTES

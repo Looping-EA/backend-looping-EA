@@ -96,6 +96,7 @@ export async function getUsers(req: Request, res: Response) {
 
 export async function deleteUser(req: Request, res:Response):Promise<Response>{
     const{uname}=req.body;
+    console.log(uname);
     const check = await User.findOne({'uname':uname});
 
     if(!check){
