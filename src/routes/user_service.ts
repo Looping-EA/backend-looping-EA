@@ -3,7 +3,8 @@
 
 import {Router} from 'express';
 import { createUser, deleteUser, getUser, logIn, getUsers, findUsersById } from '../controllers/user.controller';
-import {authenticateToken} from '../middleware/auth';
+const auth = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
 // Accomodate the routes at user_routes
 const user_router = Router();
 
@@ -18,18 +19,32 @@ user_router.get('/users/:uname', authenticateToken, (req,res)=>{
 }) //API Endpoint for existen users
   // GET the user with username = uname
 
-user_router.post('/users/delete', authenticateToken, (req,res)=>{
+user_router.post('/users/delete', auth, (req,res)=>{
     res.json(deleteUser);
 }) //API Endpoint for existen users
  // DELETE the user with username = uname
 
-user_router.post('/users/',authenticateToken, (req, res)=>{
-    res.json(getUsers);
-}) //API Endpoint for Registering a user
+user_router.route('/users/')
+    .post(authenticateToken, getUsers)
+ //API Endpoint for Registering a user
      // CREATE the user JSON object
 
-user_router.post('/users/ids', authenticateToken, (req,res)=>{
+user_router.post('/users/ids', auth, (req,res)=>{
     res.json(findUsersById);
 })
+function authenticateToken (req, res, next){
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.sendStatus(401);
+  
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err: any, user: any) => {
+      console.log(err);
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+    })
+  }
+
+
 
 export default user_router; // EXPORT THE ROUTES
