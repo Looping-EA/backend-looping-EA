@@ -2,6 +2,9 @@ import {Request, Response} from 'express';
 import Project from '../models/Project';
 
 export async function returnProjects(req:Request, res:Response){
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log("received token "+token);
     let projects = await Project.find();
     projects.forEach((project)=>project.populate('chats').populate('teams').populate('tasks').populate('collaboration').populate('owners'));
     console.log("projects returned");
