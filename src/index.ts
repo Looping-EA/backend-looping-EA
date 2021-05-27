@@ -24,12 +24,17 @@ async function main() {
     });
 
     io.on("connection", (socket: Socket) => {
+        console.log("A user connected");
+
+
+
+        socket.on('disconnect', function () {
+            console.log('A user disconnected');
+         });
     // ...
     });
 
-    httpServer.listen(3000);
-    console.log('[ SOCKETS LISTENING ]');
-
+    httpServer.listen(3000, function(){console.log('[ SOCKETS LISTENING ]')});
 }
 
 main();
