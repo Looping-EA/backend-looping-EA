@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const faq_router = Router();
 
 faq_router.route('/faqs/')
-    .get(authenticateToken, getFaqs)
+    .get(getFaqs)
 
 
 function authenticateToken (req, res, next){
