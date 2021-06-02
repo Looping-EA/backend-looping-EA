@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import user_router from './routes/user_service';
 import project_router from './routes/project_service';
+import contacto_router from './routes/contacto_service'
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.set('PORT', process.env.PORT || 8080); // then perform app.get('PORT')
 // routes. EntryPoint @ip/api/{whatever}
 app.use('/api', user_router);
 app.use('/api', project_router );
+app.use('/api', contacto_router);
 
 
 export default app; // EXPORT APP 
