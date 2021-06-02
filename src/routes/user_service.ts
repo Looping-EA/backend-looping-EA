@@ -2,7 +2,7 @@
 // entry point for user related stuff
 
 import {Router} from 'express';
-import { createUser, deleteUser, getUser, logIn, getUsers, findUsersById } from '../controllers/user.controller';
+import { createUser, deleteUser, getUser, logIn, getUsers, findUsersById, getOneInsignia } from '../controllers/user.controller';
 const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 // Accomodate the routes at user_routes
@@ -14,9 +14,8 @@ user_router.route('/users/login') //API Endpoint for Login a user
 user_router.route('/users/register') //API Endpoint for Registering a user
     .post(createUser) // CREATE the user JSON object
 
-user_router.get('/users/:uname', authenticateToken, (req,res)=>{
-    res.json(getUser);
-}) //API Endpoint for existen users
+user_router.route('/users/:uname')
+    .get(authenticateToken, getUser)//API Endpoint for existen users
   // GET the user with username = uname
 
 user_router.route('/users/delete') 
@@ -32,6 +31,8 @@ user_router.route('/users/')
 user_router.route('/users/ids')
     .post(authenticateToken, findUsersById)
 
+user_router.route('/users/updateInsigniae')
+.post(getOneInsignia)
 
 function authenticateToken (req, res, next){
     const authHeader = req.headers['authorization']

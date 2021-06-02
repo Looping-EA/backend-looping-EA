@@ -2,6 +2,7 @@
 // important functions for the user service
 import {Request, Response} from 'express';
 import User from '../models/User';
+import Insignia from '../models/Insignia';
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -52,13 +53,10 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
     }
     else {
         if(user_compr.pswd===pswd){
-            const newUser={
-                uname: user_compr.uname,
-                fullname: user_compr.fullname,
-                email: user_compr.email
-            }
-            const user = new User (newUser);
-            const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
+            const user = await User.findOne({'uname':uname}, '-pswd');
+            await user?.populate('insignias');
+            console.log(user);
+            const accessToken = jwt.sign(user?.toJSON(), process.env.ACCESS_TOKEN_SECRET);
             res.status(201);
             return res.json({accessToken: accessToken});
         }
@@ -85,6 +83,8 @@ export async function getUser(req: Request, res: Response) : Promise <Response>{
         }).status(404);
     } else {
         // user does exist
+        user.populate('insignias');
+        console.log(user);
         return res.json(user.toJSON()).status(200);
     }
 }
@@ -120,5 +120,34 @@ export async function findUsersById(req:Request, res:Response):Promise<Response>
 
 }
 
-    
-    
+export async function getOneInsignia(req:Request, res:Response): Promise<Response>{
+    const {uname, name} = req.body;
+
+    console.log("new request for updating insignia.... " + uname + " " + name);
+    const user_compr = await User.findOne({'uname': uname});
+    if(!user_compr){
+        console.log("user not found");
+        return res.status(404).json();
+    } else {
+        console.log("user found ", user_compr)
+        const ins_compr = await Insignia.findOne({'name': name});
+        if(!ins_compr){
+            console.log("insignia not found");
+            return res.status(404).json();
+        } else {
+            console.log("insignia found ", ins_compr);
+            if(user_compr.insignias.includes(ins_compr._id)){
+                console.log("user has this insignia ", user_compr.insignias);
+                return res.status(400).json();
+            } else {
+                console.log("user does not has insignia");
+                const insigniaes = user_compr.insignias;
+                insigniaes.push(ins_compr._id);
+                console.log(insigniaes);
+                const new_user = await User.findOneAndUpdate({'uname':uname}, {insignias: insigniaes});
+                await new_user?.populate('insignias');
+                return res.status(200).json(new_user?.toJSON());
+            }
+        }
+    }
+}
