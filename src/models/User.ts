@@ -21,6 +21,7 @@ const schema = new Schema({
     projectsParticipants: [{
         type: Schema.Types.ObjectId,
     }],
+    
     skills: String,
     strengths: String,
     weaknesses: String

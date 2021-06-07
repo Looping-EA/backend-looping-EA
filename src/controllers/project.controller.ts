@@ -10,6 +10,10 @@ export async function returnProjects(req:Request, res:Response){
     console.log("projects returned");
     res.status(201).json(projects);
 }
+export async function applyToProject(req:Request, res:Response){
+    const{uname, projectName}=req.body;
+  
+}
 export async function addProject(req:Request, res:Response){
     const {name, chats, creationDate, teams, tasks, description, collaboration, owners}=req.body;
     const project_compr = await Project.findOne({'name': name});
