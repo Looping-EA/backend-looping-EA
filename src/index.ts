@@ -26,13 +26,28 @@ async function main() {
   
 
     io.on("connection", (socket: Socket) => {
+        const chatID = socket.handshake.query.chatID
+        socket.join(chatID)
         console.log("A user connected");
 
 
 
         socket.on('disconnect', function () {
+            socket.leave(chatID)
             console.log('A user disconnected');
          });
+        socket.on('send_message', message => {
+            const receiverChatID = message.receiverChatID
+            const senderChatID = message.senderChatID
+            const content = message.content
+    
+            //Send message to only that particular room
+            socket.in(receiverChatID).emit('receive_message', {
+                'content': content,
+                'senderChatID': senderChatID,
+                'receiverChatID':receiverChatID,
+            })
+        })
     // ...
     });
     io.on("error", (error) => {
