@@ -12,7 +12,8 @@ export async function returnProjects(req:Request, res:Response){
 }
 export async function applyToProject(req:Request, res:Response){
     const{uname, projectName}=req.body;
-  
+    const project_compr = await Project.findOne({'name':projectName});
+    //to do
 }
 export async function addProject(req:Request, res:Response){
     const {name, chats, creationDate, teams, tasks, description, collaboration, owners}=req.body;

@@ -111,6 +111,23 @@ export async function deleteUser(req: Request, res:Response):Promise<Response>{
         return res.status(201).json(check.toJSON());
     }
 }
+export async function updateAboutMe(req:Request, res:Response):Promise<Response>{
+    const{uname, aboutMe}=req.body;
+    const user = await User.findOne({'uname':uname});
+    if (!user){
+        console.log("user not found");
+        return res.status(404).json({
+            message:'user not found',
+        });
+    }
+    else{
+        user.aboutMe=aboutMe;
+        user.save();
+        return res.status(201).json({
+            message:aboutMe, 
+        });
+    }
+}
 
 export async function findUsersById(req:Request, res:Response):Promise<Response>{
     let{ids}=req.body;
