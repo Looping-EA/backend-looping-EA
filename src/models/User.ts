@@ -22,6 +22,8 @@ const schema = new Schema({
         type: Schema.Types.ObjectId,
     }],
     aboutMe: String,
+    skills: String,
+    projects: String,
     strengths: String,
     weaknesses: String
 });
@@ -40,6 +42,8 @@ export interface IUser extends Document {
     projectsOwned: Array<any>;
     projectsParticipants: Array<any>;
     aboutMe: String,
+    skills: String,
+    projects: String,
     strengths: String,
     weaknesses: String
 }

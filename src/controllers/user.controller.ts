@@ -56,7 +56,9 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
                 uname: user_compr.uname,
                 fullname: user_compr.fullname,
                 email: user_compr.email,
-                aboutMe:user_compr.aboutMe
+                aboutMe:user_compr.aboutMe,
+                skills:user_compr.skills,
+                projects:user_compr.projects
             }
             const user = new User (newUser);
             const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
@@ -129,6 +131,48 @@ export async function updateAboutMe(req:Request, res:Response):Promise<Response>
         user.save();
         return res.status(201).json({
             message:aboutMe, 
+        });
+    }
+}
+
+export async function updateSkills(req:Request, res:Response):Promise<Response>{
+    const{uname, skills}=req.body;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log("received token "+token);
+    const user = await User.findOne({'uname':uname});
+    if (!user){
+        console.log("user not found");
+        return res.status(404).json({
+            message:'user not found',
+        });
+    }
+    else{
+        user.skills=skills;
+        user.save();
+        return res.status(201).json({
+            message:skills, 
+        });
+    }
+}
+
+export async function updateProjects(req:Request, res:Response):Promise<Response>{
+    const{uname, projects}=req.body;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log("received token "+token);
+    const user = await User.findOne({'uname':uname});
+    if (!user){
+        console.log("user not found");
+        return res.status(404).json({
+            message:'user not found',
+        });
+    }
+    else{
+        user.projects=projects;
+        user.save();
+        return res.status(201).json({
+            message:projects, 
         });
     }
 }

@@ -2,7 +2,7 @@
 // entry point for user related stuff
 
 import {Router} from 'express';
-import { createUser, deleteUser, getUser, logIn, getUsers, findUsersById, updateAboutMe } from '../controllers/user.controller';
+import { createUser, deleteUser, getUser, logIn, getUsers, findUsersById, updateAboutMe, updateSkills, updateProjects } from '../controllers/user.controller';
 const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 // Accomodate the routes at user_routes
@@ -27,6 +27,14 @@ user_router.route('/users/delete')
 user_router.route('/users/updateAboutMe')
 .post(authenticateToken, updateAboutMe)
 //API endpoint to update the about me field
+
+user_router.route('/users/updateSkills')
+.post(authenticateToken, updateSkills)
+//API endpoint to update the skills field
+
+user_router.route('/users/updateProjects')
+.post(authenticateToken, updateProjects)
+//API endpoint to update the projects field
 
 user_router.route('/users/')
     .post(authenticateToken, getUsers)
