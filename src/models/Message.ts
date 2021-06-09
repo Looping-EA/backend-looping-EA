@@ -6,12 +6,7 @@ import User, { IUser } from './User';
 // Create a schema based on discussed
 // message model:
 const schema = new Schema({
-    date: Date,
-    user: [{
-        type: Schema.Types.ObjectId,
-        ref:User
-    }],
-    message: String
+
 });
 
 // create an interface that contains all
@@ -20,9 +15,7 @@ const schema = new Schema({
 // this means that it will have all the other important
 // fields like ObjectId() = _id)
 export interface IMessage extends Document {
-    date: Date,
-    chats: IUser['_id'];
-    message: String
+
 
 }
 

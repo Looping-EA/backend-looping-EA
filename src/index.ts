@@ -22,20 +22,37 @@ async function main() {
     const httpServer = createServer(app);
     //const io = new Server(httpServer, { cors: { origin: '*', methods: ["GET", "POST"] }, transports: ["websocket"]});
     var options={ cors: { origin: '*', methods: ["GET", "POST"] }, transports: ["websocket"]};
-    let io         = require('socket.io')(httpServer,options);
+    let io         = require('socket.io')(httpServer, options);
+
+    const myClientList = {};
   
-
+    let numUsers=0;
+    let addedUser = false;
     io.on("connection", (socket: Socket) => {
-        const chatID = socket.handshake.query.chatID
-        socket.join(chatID)
-        console.log("A user connected");
-
-
+        addedUser=true;
+        ++numUsers;
+        const chatID = socket.id;
+        //socket.join(chatID)
+        console.log("A user connected with the following ID: ", chatID);
+        socket.on("new message", (data) => {
+            console.log("New message");
+            socket.broadcast.emit("new message", {id: socket.id, message: data});
+          });
+        socket.on("private message", (anotherSocketId, msg) => {
+            socket.to(anotherSocketId).emit("private message", socket.id, msg);
+          });
+        myClientList[socket.id] = socket;   
 
         socket.on('disconnect', function () {
+            if (addedUser) {
+                --numUsers;
+            }
             socket.leave(chatID)
-            console.log('A user disconnected');
+            console.log('A user disconnected with the following ID: ', chatID);
+            delete myClientList[socket.id];
          });
+
+        //Send message to only a particular user
         socket.on('send_message', message => {
             const receiverChatID = message.receiverChatID
             const senderChatID = message.senderChatID

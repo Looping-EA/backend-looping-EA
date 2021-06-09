@@ -10,6 +10,7 @@ const schema = new Schema({
     pswd: String,
     email: String,
     fullname: String,
+    chatID: String,
     recomendations: [{
         type: Schema.Types.ObjectId,
 
@@ -36,6 +37,7 @@ export interface IUser extends Document {
     pswd: String;
     email: String;
     fullname: String;
+    chatID: String;
     recomendations: Array<any>;
     projectsOwned: Array<any>;
     projectsParticipants: Array<any>;
