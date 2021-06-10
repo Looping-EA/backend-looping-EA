@@ -8,8 +8,7 @@ project_router.route('/projects/')
 .get(authenticateToken, returnProjects)
     
 
-project_router.route('/projects/add') 
-    .post(authenticateToken, addProject)
+project_router.route('/projects/add').post(authenticateToken, addProject)
 
 function authenticateToken (req, res, next){
     const authHeader = req.headers['authorization']
