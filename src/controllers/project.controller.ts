@@ -10,6 +10,20 @@ export async function returnProjects(req:Request, res:Response){
     console.log("projects returned");
     res.status(201).json(projects);
 }
+
+export async function deleteProject(req: Request, res: Response): Promise<Response>{
+    const projectName = req.params.name;
+    console.log(projectName);
+    const project_compr = await Project.deleteOne({'name': projectName});
+    console.log(project_compr);
+
+    if(project_compr.ok == 1){
+        return res.status(201).json();
+    } else {
+        return res.status(404).json();
+    }
+}
+
 export async function applyToProject(req:Request, res:Response){
     const{uname, projectName}=req.body;
     const project_compr = await Project.findOne({'name':projectName});

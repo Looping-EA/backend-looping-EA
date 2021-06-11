@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {returnProjects, addProject} from '../controllers/project.controller'
+import {returnProjects, addProject, deleteProject} from '../controllers/project.controller'
 const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 const project_router = Router();
@@ -7,6 +7,8 @@ const project_router = Router();
 project_router.route('/projects/')
 .get(authenticateToken, returnProjects)
     
+project_router.route('/projects/:name')
+.delete(authenticateToken, deleteProject)
 
 project_router.route('/projects/add') 
     .post(authenticateToken, addProject)

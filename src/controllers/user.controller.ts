@@ -21,7 +21,8 @@ export async function createUser(req: Request, res: Response): Promise<Response>
             uname: uname,
             pswd: pswd,
             email: email,
-            fullname: fullname
+            fullname: fullname,
+            isAdmin: false
         }
 
         // create a user model and save it
@@ -52,16 +53,7 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
     }
     else {
         if(user_compr.pswd===pswd){
-            const newUser={
-                uname: user_compr.uname,
-                fullname: user_compr.fullname,
-                email: user_compr.email,
-                aboutMe:user_compr.aboutMe,
-                skills:user_compr.skills,
-                projects:user_compr.projects
-            }
-            const user = new User (newUser);
-            const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
+            const accessToken = jwt.sign(user_compr.toJSON(), process.env.ACCESS_TOKEN_SECRET);
             res.status(201);
             return res.json({accessToken: accessToken});
         }
@@ -184,6 +176,23 @@ export async function findUsersById(req:Request, res:Response):Promise<Response>
     return res.status(201).json(users);
 
 }
-
-    
-    
+  
+export async function makeAdmin(req: Request, res:Response): Promise<Response>{
+    const {uname} = req.body;
+    const userToAdmin = req.params.uname;
+    if(await User.findOne({'uname': userToAdmin})){
+        const userAdmin = await User.findOne({'uname': uname});
+        if(userAdmin){
+            if(userAdmin.isAdmin){
+                const userIsNowAdmin = await User.updateOne({'uname': userToAdmin}, {'isAdmin': true});
+                return res.status(201).json();
+            } else {
+                return res.status(401).json();
+            }
+        } else {
+            return res.status(404).json();
+        }
+    } else {
+        return res.status(404).json();
+    }
+}    
