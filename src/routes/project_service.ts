@@ -10,8 +10,7 @@ project_router.route('/projects/')
 project_router.route('/projects/:name')
 .delete(authenticateToken, deleteProject)
 
-project_router.route('/projects/add') 
-    .post(authenticateToken, addProject)
+project_router.route('/projects/add').post(authenticateToken, addProject)
 
 function authenticateToken (req, res, next){
     const authHeader = req.headers['authorization']
