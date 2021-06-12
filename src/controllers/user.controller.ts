@@ -11,8 +11,7 @@ export async function createUser(req: Request, res: Response): Promise<Response>
 
     console.log("new user creation petition for user ", uname);
     console.log("searching...");
-    const user_compr = await User.findOne({'uname': uname});
-
+    const user_compr = await User.findOne({'uname': uname}).populate('projectsOwned');
     if(!user_compr){
         console.log("no coincidences found. Creating...");
 
@@ -21,7 +20,8 @@ export async function createUser(req: Request, res: Response): Promise<Response>
             uname: uname,
             pswd: pswd,
             email: email,
-            fullname: fullname
+            fullname: fullname,
+            isAdmin: false
         }
 
         // create a user model and save it
@@ -42,7 +42,7 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
     const {uname, pswd} = req.body;
     console.log("log in petition for user ", uname);
     console.log("searching...");
-    const user_compr=await User.findOne({'uname':uname});
+    const user_compr=await User.findOne({'uname':uname}).populate('projectsOwned');
     if(!user_compr){
         console.log("no coincidences found");
         res.status(404);
@@ -52,13 +52,7 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
     }
     else {
         if(user_compr.pswd===pswd){
-            const newUser={
-                uname: user_compr.uname,
-                fullname: user_compr.fullname,
-                email: user_compr.email
-            }
-            const user = new User (newUser);
-            const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
+            const accessToken = jwt.sign(user_compr.toJSON(), process.env.ACCESS_TOKEN_SECRET);
             res.status(201);
             return res.json({accessToken: accessToken});
         }
@@ -111,6 +105,68 @@ export async function deleteUser(req: Request, res:Response):Promise<Response>{
         return res.status(201).json(check.toJSON());
     }
 }
+export async function updateAboutMe(req:Request, res:Response):Promise<Response>{
+    const{uname, aboutMe}=req.body;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log("received token "+token);
+    const user = await User.findOne({'uname':uname});
+    if (!user){
+        console.log("user not found");
+        return res.status(404).json({
+            message:'user not found',
+        });
+    }
+    else{
+        user.aboutMe=aboutMe;
+        user.save();
+        return res.status(201).json({
+            message:aboutMe, 
+        });
+    }
+}
+
+export async function updateSkills(req:Request, res:Response):Promise<Response>{
+    const{uname, skills}=req.body;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log("received token "+token);
+    const user = await User.findOne({'uname':uname});
+    if (!user){
+        console.log("user not found");
+        return res.status(404).json({
+            message:'user not found',
+        });
+    }
+    else{
+        user.skills=skills;
+        user.save();
+        return res.status(201).json({
+            message:skills, 
+        });
+    }
+}
+
+export async function updateProjects(req:Request, res:Response):Promise<Response>{
+    const{uname, projects}=req.body;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log("received token "+token);
+    const user = await User.findOne({'uname':uname});
+    if (!user){
+        console.log("user not found");
+        return res.status(404).json({
+            message:'user not found',
+        });
+    }
+    else{
+        user.projects=projects;
+        user.save();
+        return res.status(201).json({
+            message:projects, 
+        });
+    }
+}
 
 export async function findUsersById(req:Request, res:Response):Promise<Response>{
     let{ids}=req.body;
@@ -119,6 +175,23 @@ export async function findUsersById(req:Request, res:Response):Promise<Response>
     return res.status(201).json(users);
 
 }
-
-    
-    
+  
+export async function makeAdmin(req: Request, res:Response): Promise<Response>{
+    const {uname} = req.body;
+    const userToAdmin = req.params.uname;
+    if(await User.findOne({'uname': userToAdmin})){
+        const userAdmin = await User.findOne({'uname': uname});
+        if(userAdmin){
+            if(userAdmin.isAdmin){
+                const userIsNowAdmin = await User.updateOne({'uname': userToAdmin}, {'isAdmin': true});
+                return res.status(201).json();
+            } else {
+                return res.status(401).json();
+            }
+        } else {
+            return res.status(404).json();
+        }
+    } else {
+        return res.status(404).json();
+    }
+}    

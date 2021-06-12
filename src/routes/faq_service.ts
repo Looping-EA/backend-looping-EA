@@ -1,16 +1,12 @@
 import {Router} from 'express';
-import {returnProjects, addProject, deleteProject} from '../controllers/project.controller'
+import {getFaqs} from '../controllers/faq.controller'
 const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
-const project_router = Router();
+const faq_router = Router();
 
-project_router.route('/projects/')
-.get(authenticateToken, returnProjects)
-    
-project_router.route('/projects/:name')
-.delete(authenticateToken, deleteProject)
+faq_router.route('/faqs/')
+    .get(getFaqs)
 
-project_router.route('/projects/add').post(authenticateToken, addProject)
 
 function authenticateToken (req, res, next){
     const authHeader = req.headers['authorization']
@@ -24,4 +20,4 @@ function authenticateToken (req, res, next){
       next();
     })
   }
-export default project_router;
+export default faq_router;

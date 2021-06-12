@@ -28,10 +28,10 @@ const schema = new Schema({
         type: Schema.Types.ObjectId,
         ref:User
     }],
-    owners: [{
+    owner: {
         type: Schema.Types.ObjectId,
         ref:User
-    }],
+    },
 });
 
 // create an interface that contains all
@@ -47,7 +47,7 @@ export interface IProjects extends Document {
     tasks:ITask['_id'];
     description: String,
     collaboration: IUser['_id'];
-    owners: IUser['_id'];
+    owner: IUser['_id'];
 }
 
 export default model<IProjects>('Project', schema); // EXPORT THE MODEL
