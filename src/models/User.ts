@@ -10,6 +10,7 @@ const schema = new Schema({
     pswd: String,
     email: String,
     fullname: String,
+    isAdmin: Boolean,
     recomendations: [{
         type: Schema.Types.ObjectId,
 
@@ -21,7 +22,9 @@ const schema = new Schema({
     projectsParticipants: [{
         type: Schema.Types.ObjectId,
     }],
+    aboutMe: String,
     skills: String,
+    projects: String,
     strengths: String,
     weaknesses: String
 });
@@ -36,10 +39,13 @@ export interface IUser extends Document {
     pswd: String;
     email: String;
     fullname: String;
+    isAdmin: Boolean;
     recomendations: Array<any>;
     projectsOwned: Array<any>;
     projectsParticipants: Array<any>;
+    aboutMe: String,
     skills: String,
+    projects: String,
     strengths: String,
     weaknesses: String
 }
