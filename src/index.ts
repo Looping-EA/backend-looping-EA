@@ -18,7 +18,7 @@ async function main() {
     // Message
     console.log('LISTENING @ ', PORT);
 
-    //sockets
+    //Sockets
     const httpServer = createServer(app);
     //const io = new Server(httpServer, { cors: { origin: '*', methods: ["GET", "POST"] }, transports: ["websocket"]});
     var options={ cors: { origin: '*', methods: ["GET", "POST"] }, transports: ["websocket"]};
@@ -34,9 +34,10 @@ async function main() {
         const chatID = socket.id;
         //socket.join(chatID)
         console.log("A user connected with the following ID: ", chatID);
-        socket.on("new message", (data) => {
+        socket.on("/test",(msg)=>{console.log(msg);})
+        socket.on("message", (msg) => {
             console.log("New message");
-            socket.broadcast.emit("new message", {id: socket.id, message: data});
+            console.log(msg);
           });
         socket.on("private message", (anotherSocketId, msg) => {
             socket.to(anotherSocketId).emit("private message", socket.id, msg);
