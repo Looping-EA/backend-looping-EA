@@ -19,3 +19,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWNvbWVuZGF0aW9uc
 {
     "uname":"MaFe14"
 }
+###
+POST http://147.83.7.159:9090/api/users/register
+Content-Type: application/json
+
+{"uname":"marc", "pswd":"contrasena", "email":"marc@gmail.com", "fullname":"Marc F"}
