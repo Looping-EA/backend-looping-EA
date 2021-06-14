@@ -15,9 +15,7 @@ export async function returnProjects(req:Request, res:Response){
 
 export async function deleteProject(req: Request, res: Response): Promise<Response>{
     const projectName = req.params.name;
-    console.log(projectName);
     const project_compr = await Project.deleteOne({'name': projectName});
-    console.log(project_compr);
 
     if(project_compr.ok == 1){
         return res.status(201).json();
@@ -33,10 +31,8 @@ export async function applyToProject(req:Request, res:Response){
 }
 export async function addProject(req:Request, res:Response){
     const {name, chats, creationDate, teams, tasks, description, collaboration, owner}=req.body;
-    console.log(owner + "buenass");
     const project_compr = await Project.findOne({'name': name});
     const ownerr = await User.findOne({'uname': owner});
-    console.log(ownerr?.uname+" quepasaa");
     if (!project_compr){
         const newProject={
             name:name,
