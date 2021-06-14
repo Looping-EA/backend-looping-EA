@@ -107,9 +107,6 @@ export async function deleteUser(req: Request, res:Response):Promise<Response>{
 }
 export async function updateAboutMe(req:Request, res:Response):Promise<Response>{
     const{uname, aboutMe}=req.body;
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    console.log("received token "+token);
     const user = await User.findOne({'uname':uname});
     if (!user){
         console.log("user not found");
@@ -128,9 +125,6 @@ export async function updateAboutMe(req:Request, res:Response):Promise<Response>
 
 export async function updateSkills(req:Request, res:Response):Promise<Response>{
     const{uname, skills}=req.body;
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    console.log("received token "+token);
     const user = await User.findOne({'uname':uname});
     if (!user){
         console.log("user not found");
@@ -148,10 +142,7 @@ export async function updateSkills(req:Request, res:Response):Promise<Response>{
 }
 
 export async function updateProjects(req:Request, res:Response):Promise<Response>{
-    const{uname, projects}=req.body;
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    console.log("received token "+token);
+    const{uname, projects}=req.body;;
     const user = await User.findOne({'uname':uname});
     if (!user){
         console.log("user not found");
