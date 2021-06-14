@@ -37,8 +37,7 @@ const schema = new Schema({
 export interface IProjects extends Document {
     name: String,
     chats: IChat['_id'];
-    creationDate: Date,
-    teams: ITeam['_id'];
+    creationDate: Date;
     tasks:ITask['_id'];
     description: String,
     collaboration: IUser['_id'];
