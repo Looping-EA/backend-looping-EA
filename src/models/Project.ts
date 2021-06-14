@@ -4,7 +4,6 @@ import {Schema, model, Document} from 'mongoose';
 import User, { IUser } from './User';
 import Task, { ITask} from './Task';
 import Chat, { IChat} from './Chat';
-import Team, { ITeam} from './Team';
 
 // Create a schema based on discussed
 // projects model:
@@ -15,10 +14,6 @@ const schema = new Schema({
         ref:Chat
     }],
     creationDate: Date,
-    teams: [{
-        type: Schema.Types.ObjectId,
-        ref:Team
-    }],
     tasks: [{
         type: Schema.Types.ObjectId,
         ref:Task

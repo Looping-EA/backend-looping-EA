@@ -3,13 +3,7 @@ import Project from '../models/Project';
 import User from '../models/User';
 
 export async function returnProjects(req:Request, res:Response){
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    console.log("received token "+token);
     let projects = await Project.find().populate('owner');
-   // projects.forEach(async (project)=>await project.populate('chats').populate('teams').populate('tasks').populate('collaboration').populate('owner'));
-    console.log(projects[0]?.owner + "the owner of the first project is");
-    console.log("projects returned");
     res.status(201).json(projects);
 }
 
@@ -31,7 +25,7 @@ export async function applyToProject(req:Request, res:Response){
 }
 export async function addProject(req:Request, res:Response){
 
-    const {name, chats, creationDate, teams, tasks, description, collaboration, owner}=req.body;
+    const {name, chats, creationDate, tasks, description, collaboration, owner}=req.body;
     const project_compr = await Project.findOne({'name': name});
     const ownerr = await User.findOne({'uname': owner});
     if (!project_compr){
@@ -39,7 +33,6 @@ export async function addProject(req:Request, res:Response){
             name:name,
             chats:chats,
             creationDate:creationDate,
-            teams:teams,
             tasks:tasks,
             description:description,
             collaboration:collaboration,
