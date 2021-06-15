@@ -26,6 +26,9 @@ const schema = new Schema({
     skills: String,
     projects: String,
     strengths: String,
+    notifications: [{
+        type:String,
+    }],
     weaknesses: String
 });
 
@@ -47,6 +50,7 @@ export interface IUser extends Document {
     skills: String,
     projects: String,
     strengths: String,
+    notifications:Array<any>,
     weaknesses: String
 }
 
