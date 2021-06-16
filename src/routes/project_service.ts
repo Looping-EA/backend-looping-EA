@@ -1,11 +1,15 @@
 import {Router} from 'express';
-import {returnProjects, addProject} from '../controllers/project.controller'
+import {returnProjects, addProject, deleteProject} from '../controllers/project.controller'
+import {authenticateToken} from '../middleware/auth';
 
 const project_router = Router();
 
 project_router.route('/projects/')
-    .post(returnProjects)
+.get(authenticateToken, returnProjects)
+    
+project_router.route('/projects/:name')
+.delete(authenticateToken, deleteProject)
 
-project_router.route('/projects/add')
-    .post(addProject)
+project_router.route('/projects/add').post(authenticateToken, addProject)
+
 export default project_router;
