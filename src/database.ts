@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 
 export async function startDatabase() {
-    const db = await mongoose.connect('mongodb://127.0.0.1:27017/looping', {
+    const url = process.env.PROD_URL || 'mongodb://127.0.0.1:27017/looping';
+    const db = await mongoose.connect(url, {
     	useUnifiedTopology: true,
 	useNewUrlParser: true,
-	useFindAndModify: false
     });
 
     console.log('[ DATABASE RUNNING ]');

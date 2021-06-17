@@ -9,6 +9,10 @@ COPY . /usr/src/app
 # INSTALL DEPENDENCIES
 RUN npm install
 
+# SET ENVIRONMENT
+ARG PROD_URL="mongodb://database:27017/looping"
+ARG PORT="9090"
+
 # BUILD
 CMD ["npm", "run-script build"]
 
