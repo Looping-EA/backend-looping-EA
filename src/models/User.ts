@@ -1,6 +1,7 @@
 // User model
 // You can copy this file and modify it to create the other ones
 import {Schema, model, Document} from 'mongoose';
+import Notification, { INotification } from './Notification';
 import Project, { IProjects } from './Project';
 
 // Create a schema based on discussed
@@ -16,8 +17,8 @@ const schema = new Schema({
 
     }],
     projectsOwned: [{
-        type: Schema.Types.ObjectId,
-
+        type:Schema.Types.ObjectId,
+        ref: 'Project'
     }],
     projectsParticipants: [{
         type: Schema.Types.ObjectId,
@@ -27,7 +28,8 @@ const schema = new Schema({
     projects: String,
     strengths: String,
     notifications: [{
-        type:String,
+        type:Schema.Types.ObjectId,
+        ref:Notification
     }],
     weaknesses: String
 });
@@ -44,13 +46,13 @@ export interface IUser extends Document {
     fullname: String;
     isAdmin: Boolean;
     recomendations: Array<any>;
-    projectsOwned: Array<any>;
+    projectsOwned: IProjects['_id'];
     projectsParticipants: Array<any>;
     aboutMe: String,
     skills: String,
     projects: String,
     strengths: String,
-    notifications:Array<any>,
+    notifications:INotification['_id'],
     weaknesses: String
 }
 

@@ -1,9 +1,9 @@
 import {Request, Response} from 'express';
 import Project from '../models/Project';
 import User from '../models/User';
-
+import Notification from '../models/Notification';
 export async function returnProjects(req:Request, res:Response){
-    let projects = await Project.find().populate('owner');
+    let projects = await Project.find().populate('owner').populate('collaboration');
     res.status(201).json(projects);
 }
 
@@ -22,11 +22,17 @@ export async function applyToProject(req:Request, res:Response){
     const{uname, owner, projectName}=req.body;
     const project_compr = await Project.findOne({'name':projectName});
     if(project_compr){
-     let notif: string = uname+ " wants to apply to the project: "+projectName;
      const find_owner = await User.findOne({'uname': owner});
-     if (find_owner){
-         find_owner.notifications.push(notif);
-         find_owner.save();
+     const find_uname = await User.findOne({'uname': uname});
+     if (find_owner&&find_uname){
+        const notification = new Notification();
+        let notif: string = uname+" wants to apply to the project: "+projectName;
+        notification.message = notif;
+        notification.user=find_uname.uname;
+        notification.project=project_compr.name;
+        find_owner.notifications.push(notification);
+        notification.save();
+        find_owner.save();
          return res.status(201).json({
             message: "notification sent",
          });
@@ -42,15 +48,29 @@ return res.status(404).json({
 }
 
 export async function acceptMember(req:Request, res:Response){
-    const{uname, projectName}=req.body;
+    const{projectName, userAccepted, uname}=req.body;
     const project_compr = await Project.findOne({'name':projectName});
     if(project_compr){
-        const user_check = await User.findOne({'uname':uname});
-        if (user_check){
-            project_compr.members.push(user_check);
+        const user_check = await User.findOne({'uname':userAccepted});
+        const owner_check = await User.findOne({'uname':uname});
+        if (user_check&&owner_check){
+            let i: number = 0;
+            for (i;i<project_compr.collaboration.length;i++){
+                if(project_compr.collaboration[i].uname == user_check.uname){
+                    return res.status(409).json({
+                        message:"The user is already in the project"
+                    });
+                }
+            }
+            project_compr.collaboration.push(user_check);
             project_compr.save();
             let notif : string = "Congratulations, you have been accepted at "+projectName;
-            user_check.notifications.push(notif);
+            const notification = new Notification();
+            notification.message=notif;
+            notification.save();
+            const del_notif = await Notification.deleteOne({'message':user_check.uname+" wants to apply to the project: "+projectName});
+            user_check.notifications.push(notification);
+            user_check.save();
             return res.status(201).json({
                 message:"user accepted"
             });
@@ -65,17 +85,37 @@ export async function acceptMember(req:Request, res:Response){
 }
 
 export async function rejectMember(req:Request, res:Response){
-    const{uname, projectName} = req.body;
-    const user_check = await User.findOne({'uname':uname});
-    if(user_check){
-        let notif: string = "We are sorry. You have been rejected at "+projectName;
-        user_check.notifications.push(notif);
-        return res.status(201).json({
-            message:"user rejected"
+    const{projectName, userRejected, uname}=req.body;
+    const project_compr = await Project.findOne({'name':projectName});
+    if(project_compr){
+        const user_check = await User.findOne({'uname':userRejected});
+        const owner_check = await User.findOne({'uname':uname});
+        if (user_check&&owner_check){
+            let i: number = 0;
+            for (i=0;i<project_compr.collaboration.length;i++){
+                if(project_compr.collaboration[i].uname == user_check.uname){
+                    return res.status(409).json({
+                        message:"The user is already in the project"
+                    });
+                }
+            }
+            let notif : string = "We are sorry, you have been rejected at "+projectName;
+            const notification = new Notification();
+            notification.message=notif;
+            notification.save();
+            const del_notif = await Notification.deleteOne({'message':user_check.uname+" wants to apply to the project: "+projectName});
+            user_check.notifications.push(notification);
+            user_check.save();
+            return res.status(201).json({
+                message:"user rejected"
+            });
+        }
+        return res.status(404).json({
+            message:"user not found"
         });
     }
     return res.status(404).json({
-        message:"user not found"
+        message:"project not found"
     });
 }
 export async function addProject(req:Request, res:Response){

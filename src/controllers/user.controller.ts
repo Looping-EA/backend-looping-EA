@@ -42,7 +42,7 @@ export async function logIn(req:Request, res:Response):Promise<Response>{
     const {uname, pswd} = req.body;
     console.log("log in petition for user ", uname);
     console.log("searching...");
-    const user_compr=await User.findOne({'uname':uname}).populate('projectsOwned');
+    const user_compr=await User.findOne({'uname':uname}).populate('projectsOwned').populate('notifications');
     if(!user_compr){
         console.log("no coincidences found");
         res.status(404);
