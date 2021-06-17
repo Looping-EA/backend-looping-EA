@@ -18,3 +18,6 @@ CMD ["npm", "run-script build"]
 
 # EXECUTE THE SERVER
 CMD ["node", "dist/index.js"]
+
+
+EXPOSE 9090
