@@ -24,7 +24,7 @@ async function main() {
     var options={ cors: { origin: '*', methods: ["GET", "POST"] }, transports: ["websocket"]};
     let io         = require('socket.io')(httpServer, options);
 
-    const myClientList = {};
+    var myClientList = {};
   
     let numUsers=0;
     let addedUser = false;
@@ -34,10 +34,18 @@ async function main() {
         const chatID = socket.id;
         //socket.join(chatID)
         console.log("A user connected with the following ID: ", chatID);
-        socket.on("/test",(msg)=>{console.log(msg);})
+        socket.on("/test",(msg)=>{console.log(msg);});
+        socket.on("signin", (id)=> {
+            console.log(id);
+            myClientList[id]=socket;
+            console.log(myClientList);
+        });
+
         socket.on("message", (msg) => {
             console.log("New message");
             console.log(msg);
+            let targetId= msg.targetId;
+            if (myClientList[targetId]) myClientList[targetId].emit("message",msg);
           });
         socket.on("private message", (anotherSocketId, msg) => {
             socket.to(anotherSocketId).emit("private message", socket.id, msg);
