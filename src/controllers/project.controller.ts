@@ -25,6 +25,13 @@ export async function applyToProject(req:Request, res:Response){
      const find_owner = await User.findOne({'uname': owner});
      const find_uname = await User.findOne({'uname': uname});
      if (find_owner&&find_uname){
+         const find_notif = await Notification.findOne({'message':uname+" wants to apply to the project: "+projectName});
+         if(find_notif != null){
+             return res.status(409).json({
+                 message:"You have already applied",
+             });
+         }
+         else{
         const notification = new Notification();
         let notif: string = uname+" wants to apply to the project: "+projectName;
         notification.message = notif;
@@ -33,9 +40,11 @@ export async function applyToProject(req:Request, res:Response){
         find_owner.notifications.push(notification);
         notification.save();
         find_owner.save();
-         return res.status(201).json({
+        return res.status(201).json({
             message: "notification sent",
          });
+         }
+        
      }
      return res.status(404).json({
         message:"The owner does not exist. Wtf?"
@@ -54,14 +63,6 @@ export async function acceptMember(req:Request, res:Response){
         const user_check = await User.findOne({'uname':userAccepted});
         const owner_check = await User.findOne({'uname':uname});
         if (user_check&&owner_check){
-            let i: number = 0;
-            for (i;i<project_compr.collaboration.length;i++){
-                if(project_compr.collaboration[i].uname == user_check.uname){
-                    return res.status(409).json({
-                        message:"The user is already in the project"
-                    });
-                }
-            }
             project_compr.collaboration.push(user_check);
             project_compr.save();
             let notif : string = "Congratulations, you have been accepted at "+projectName;

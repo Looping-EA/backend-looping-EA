@@ -70,7 +70,7 @@ export async function getUser(req: Request, res: Response) : Promise <Response>{
 
     console.log("new user search petition for user ", uname);
     console.log("searching...")
-    const user = await User.findOne({'uname': uname}, '-pswd');
+    const user = await User.findOne({'uname': uname}, '-pswd').populate('projectsOwned').populate('notifications');
 
     if(!user){
         // user does NOT exist
