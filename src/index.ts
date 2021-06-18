@@ -25,6 +25,7 @@ async function main() {
     let io         = require('socket.io')(httpServer, options);
 
     var myClientList = {};
+    let realId;
   
     let numUsers=0;
     let addedUser = false;
@@ -32,13 +33,13 @@ async function main() {
         addedUser=true;
         ++numUsers;
         const chatID = socket.id;
-        //socket.join(chatID)
+        
         console.log("A user connected with the following ID: ", chatID);
         socket.on("/test",(msg)=>{console.log(msg);});
         socket.on("signin", (id)=> {
             console.log(id);
+            realId=id;
             myClientList[id]=socket;
-            console.log(myClientList);
         });
 
         socket.on("message", (msg) => {
@@ -47,34 +48,14 @@ async function main() {
             let targetId= msg.targetId;
             if (myClientList[targetId]) myClientList[targetId].emit("message",msg);
           });
-        socket.on("private message", (anotherSocketId, msg) => {
-            socket.to(anotherSocketId).emit("private message", socket.id, msg);
-          });
-        myClientList[socket.id] = socket;   
 
         socket.on('disconnect', function () {
             if (addedUser) {
                 --numUsers;
             }
-            socket.leave(chatID)
             console.log('A user disconnected with the following ID: ', chatID);
-            delete myClientList[socket.id];
-         });
-
-        //Send message to only a particular user
-        socket.on('send_message', message => {
-            const receiverChatID = message.receiverChatID
-            const senderChatID = message.senderChatID
-            const content = message.content
-    
-            //Send message to only that particular room
-            socket.in(receiverChatID).emit('receive_message', {
-                'content': content,
-                'senderChatID': senderChatID,
-                'receiverChatID':receiverChatID,
-            })
-        })
-    // ...
+            delete myClientList[realId];
+         });[]
     });
     io.on("error", (error) => {
         console.log("There is an error", error);
