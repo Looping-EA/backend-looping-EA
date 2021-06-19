@@ -120,5 +120,15 @@ export async function findUsersById(req:Request, res:Response):Promise<Response>
 
 }
 
+//Return List of users
+export async function returnUsers(req:Request, res:Response){
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log("received token "+token);
+    let users = await User.find();
+    console.log("users returned");
+    res.status(201).json(users);
+}
+
     
     

@@ -2,7 +2,7 @@
 // entry point for user related stuff
 
 import {Router} from 'express';
-import { createUser, deleteUser, getUser, logIn, getUsers, findUsersById } from '../controllers/user.controller';
+import { createUser, deleteUser, getUser, logIn, getUsers, findUsersById, returnUsers } from '../controllers/user.controller';
 const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 // Accomodate the routes at user_routes
@@ -31,6 +31,9 @@ user_router.route('/users/')
 
 user_router.route('/users/ids')
     .post(authenticateToken, findUsersById)
+
+user_router.route('/projects/')
+.get(authenticateToken, returnUsers)
 
 
 function authenticateToken (req, res, next){
