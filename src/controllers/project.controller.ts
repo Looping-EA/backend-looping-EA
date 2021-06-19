@@ -56,6 +56,7 @@ return res.status(404).json({
 });
 }
 
+
 export async function acceptMember(req:Request, res:Response){
     const{projectName, userAccepted, uname}=req.body;
     const project_compr = await Project.findOne({'name':projectName});

@@ -18,6 +18,7 @@ project_router.route('/projects/acceptMember').post(authenticateToken, acceptMem
 
 project_router.route('/projects/rejectMember').post(authenticateToken, rejectMember)
 
+
 function authenticateToken (req, res, next){
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1];

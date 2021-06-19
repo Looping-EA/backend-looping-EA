@@ -2,6 +2,7 @@
 // important functions for the user service
 import {Request, Response} from 'express';
 import User from '../models/User';
+import Notification from '../models/Notification';
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -23,6 +24,7 @@ export async function createUser(req: Request, res: Response): Promise<Response>
             fullname: fullname,
             isAdmin: false
         }
+        
 
         // create a user model and save it
         const user = new User (newUser);
@@ -37,6 +39,25 @@ export async function createUser(req: Request, res: Response): Promise<Response>
             message: 'Could not create user',
         });
     }
+}
+export async function deleteNotif(req:Request, res:Response):Promise<Response>{
+    const{notification, user}=req.body;
+    const user_check = await User.findOne({'uname':user}).populate('notifications');
+    if(user_check){
+        let i:number = 0;
+        console.log(notification);
+        for(i;i<user_check.notifications.length;i++){
+            if(user_check.notifications[i].message==notification){
+                await Notification.deleteOne({'_id':user_check.notifications[i]._id});
+                return res.status(201).json({
+                    message:"deleted"
+                });
+            }
+        }
+    }
+    return res.status(403).json({
+        message:"not found"
+    });
 }
 export async function logIn(req:Request, res:Response):Promise<Response>{
     const {uname, pswd} = req.body;
