@@ -3,6 +3,7 @@
 import {Request, Response} from 'express';
 import User from '../models/User';
 import Notification from '../models/Notification';
+import Photo from '../models/Photo';
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -15,23 +16,24 @@ export async function createUser(req: Request, res: Response): Promise<Response>
     const user_compr = await User.findOne({'uname': uname}).populate('projectsOwned');
     if(!user_compr){
         console.log("no coincidences found. Creating...");
-
         // new user.
         const newUser = {
             uname: uname,
             pswd: pswd,
             email: email,
             fullname: fullname,
-            isAdmin: false
+            isAdmin: false,
+            photo:""
         }
         
 
         // create a user model and save it
         const user = new User (newUser);
         await user.save();
-        res.status(201);
+    
         const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
-        return res.json({accessToken: accessToken}); // Promises need to return something
+        return res.status(201).json({accessToken: accessToken});
+        // Promises need to return something
     } else {
         console.log("user already exists");
         res.status(401);

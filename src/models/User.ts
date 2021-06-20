@@ -2,6 +2,7 @@
 // You can copy this file and modify it to create the other ones
 import {Schema, model, Document} from 'mongoose';
 import Notification, { INotification } from './Notification';
+import Photo, { IPhoto } from './Photo';
 import Project, { IProjects } from './Project';
 
 // Create a schema based on discussed
@@ -27,6 +28,7 @@ const schema = new Schema({
     skills: String,
     projects: String,
     strengths: String,
+    photo: String,
     notifications: [{
         type:Schema.Types.ObjectId,
         ref:Notification
@@ -52,6 +54,7 @@ export interface IUser extends Document {
     skills: String,
     projects: String,
     strengths: String,
+    photo:String,
     notifications:INotification['_id'],
     weaknesses: String
 }
