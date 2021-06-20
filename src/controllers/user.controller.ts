@@ -36,8 +36,7 @@ export async function createUser(req: Request, res: Response): Promise<Response>
         // Promises need to return something
     } else {
         console.log("user already exists");
-        res.status(401);
-        return res.json({
+        return res.status(404).json({
             message: 'Could not create user',
         });
     }
