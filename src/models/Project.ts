@@ -4,7 +4,6 @@ import {Schema, model, Document} from 'mongoose';
 import User, { IUser } from './User';
 import Task, { ITask} from './Task';
 import Chat, { IChat} from './Chat';
-import Team, { ITeam} from './Team';
 
 // Create a schema based on discussed
 // projects model:
@@ -15,10 +14,6 @@ const schema = new Schema({
         ref:Chat
     }],
     creationDate: Date,
-    teams: [{
-        type: Schema.Types.ObjectId,
-        ref:Team
-    }],
     tasks: [{
         type: Schema.Types.ObjectId,
         ref:Task
@@ -28,10 +23,14 @@ const schema = new Schema({
         type: Schema.Types.ObjectId,
         ref:User
     }],
-    owners: [{
+    owner: {
         type: Schema.Types.ObjectId,
         ref:User
-    }],
+    },
+    members:[{
+        type:Schema.Types.ObjectId,
+        ref:User
+    }]
 });
 
 // create an interface that contains all
@@ -42,12 +41,12 @@ const schema = new Schema({
 export interface IProjects extends Document {
     name: String,
     chats: IChat['_id'];
-    creationDate: Date,
-    teams: ITeam['_id'];
+    creationDate: Date;
     tasks:ITask['_id'];
     description: String,
     collaboration: IUser['_id'];
-    owners: IUser['_id'];
+    owner: IUser['_id'];
+    members:IUser['_id'];
 }
 
 export default model<IProjects>('Project', schema); // EXPORT THE MODEL

@@ -1,15 +1,23 @@
 import {Router} from 'express';
-import {returnProjects, addProject} from '../controllers/project.controller'
-const auth = require('../middleware/auth');
+import {returnProjects, addProject, deleteProject, applyToProject, acceptMember, rejectMember} from '../controllers/project.controller'
 const jwt = require('jsonwebtoken');
+
 const project_router = Router();
 
 project_router.route('/projects/')
 .get(authenticateToken, returnProjects)
     
+project_router.route('/projects/:name')
+.delete(authenticateToken, deleteProject)
 
-project_router.route('/projects/add') 
-    .post(authenticateToken, addProject)
+project_router.route('/projects/add').post(authenticateToken, addProject)
+
+project_router.route('/projects/apply').post(authenticateToken, applyToProject)
+
+project_router.route('/projects/acceptMember').post(authenticateToken, acceptMember)
+
+project_router.route('/projects/rejectMember').post(authenticateToken, rejectMember)
+
 
 function authenticateToken (req, res, next){
     const authHeader = req.headers['authorization']
@@ -23,4 +31,5 @@ function authenticateToken (req, res, next){
       next();
     })
   }
+
 export default project_router;
