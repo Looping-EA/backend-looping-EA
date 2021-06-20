@@ -8,6 +8,8 @@ import project_router from './routes/project_service';
 import contacto_router from './routes/contacto_service'
 import location_router from './routes/location_service';
 import faq_router from './routes/faq_service';
+import notification_router from './routes/notification_service';
+import photo_router from './routes/photo_service';
 
 const app = express();
 
@@ -27,6 +29,7 @@ app.use('/api', project_router );
 app.use('/api', contacto_router);
 app.use('/api', location_router);
 app.use('/api', faq_router);
-
+app.use('/api',notification_router);
+app.use('/api', photo_router);
 
 export default app; // EXPORT APP 
