@@ -18,3 +18,12 @@ export async function addContacto(req: Request, res: Response){
     return res.json(new_contacto.toJSON());
 
 }
+
+export async function getContacto(req: Request, res: Response){
+
+    let contacto = await Contacto.find();
+    contacto.forEach((contacto)=>contacto.populate('uname').populate('date').populate('message'));
+    console.log("contactos returned");
+    res.status(201).json(contacto);
+
+}
