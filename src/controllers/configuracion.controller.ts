@@ -4,7 +4,7 @@ import {request, Request, Response} from 'express';
 
 
 //Create
-export async function add(req: Request, res: Response){
+export async function addConfiguracion(req: Request, res: Response){
     
     const {uname,notificaciones, privacidad, seguridad} = req.body;
     console.log("new user creation petition for user ", uname);
@@ -12,7 +12,7 @@ export async function add(req: Request, res: Response){
     //comprobar que exista
     const usr_compare = await Configuracion.findOne({'uname': uname});
     //si no existe
-    if(!usr_compare){
+    if(!usr_compare){   
         const new_configuracion = new Configuracion({
             uname: uname,
             notificaciones: notificaciones,

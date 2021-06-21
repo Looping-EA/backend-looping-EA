@@ -11,6 +11,7 @@ import location_router from './routes/location_service';
 import faq_router from './routes/faq_service';
 import notification_router from './routes/notification_service';
 import photo_router from './routes/photo_service';
+import forum_router from './routes/forum_service';
 
 const app = express();
 
@@ -33,5 +34,6 @@ app.use('/api', location_router);
 app.use('/api', faq_router);
 app.use('/api',notification_router);
 app.use('/api', photo_router);
+app.use('/api', forum_router);
 
 export default app; // EXPORT APP 

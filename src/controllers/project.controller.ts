@@ -126,6 +126,7 @@ export async function addProject(req:Request, res:Response){
     const project_compr = await Project.findOne({'name': name});
     const ownerr = await User.findOne({'uname': owner});
     if (!project_compr){
+        
         const newProject={
             name:name,
             chats:chats,
@@ -133,7 +134,8 @@ export async function addProject(req:Request, res:Response){
             tasks:tasks,
             description:description,
             collaboration:collaboration,
-            owner:ownerr?.id
+            owner:ownerr?.id,
+            entry: []
         }
         const project = new Project(newProject);
         await project.save();
