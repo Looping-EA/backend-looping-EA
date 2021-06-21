@@ -2,7 +2,7 @@ import {Request, Response} from 'express'
 import Photo from '../models/Photo'
 import User from '../models/User'
 import path from 'path'
-import fs from 'fs-extra'
+//import fs from 'fs-extra'
 
 export async function createPhoto(req: Request, res: Response): Promise<Response> {
     const{ user,imagePath} = req.body;
