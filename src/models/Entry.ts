@@ -2,7 +2,6 @@ import { Schema, model, Document } from 'mongoose';
 import Post, { IPost } from './Post';
 
 // Create a schema based on discussed
-// forum model:
 const schema = new Schema({
     name: String,
     description: String,
