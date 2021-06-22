@@ -219,23 +219,25 @@ export async function getUserProjects(req: Request, res: Response): Promise<Resp
     if(usr_compr){
         console.log('*** found user... \n *** indexing projects ...');
         const projectsNotPopulated = usr_compr.projectsOwned;
-        usr_compr.projectsParticipants.forEach(function (val) {
-            projectsNotPopulated.push(val);
+        await usr_compr.projectsParticipants.forEach(async function (val) {
+            await projectsNotPopulated.push(val);
         });
-
+        console.log(`amount of projects in: ${projectsNotPopulated.length}`);
         if(projectsNotPopulated.length != 0){
             let projects: any = [];
-            projectsNotPopulated.forEach(async function (val: any) {
+            await projectsNotPopulated.forEach(async function (val: any) {
                 const project = await Project.findOne({'name': val.name}).populate('entries');
-                if(project)
-                    projects.push(project);
-                else
+                if(project){
+                    await projects.push(project);
+                    console.log(`added project ${project.name}`);
+                } else{
                     console.log('*** empty pretty error');
+                }
             });
 
             return res.status(200).json(projects);
         } else {
-            return res.status(200).json();
+            return res.status(404).json();
         }
     } else {
         console.log('*** no user coincidences');
