@@ -217,28 +217,11 @@ export async function getUserProjects(req: Request, res: Response): Promise<Resp
     console.log(`*** new petition to get projects from ${uname}`);
     const usr_compr = await User.findOne({'uname': uname}).populate('projectsOwned').populate('projectsParticipants');
     if(usr_compr){
-        console.log('*** found user... \n *** indexing projects ...');
-        const projectsNotPopulated = usr_compr.projectsOwned;
-        await usr_compr.projectsParticipants.forEach(async function (val) {
-            await projectsNotPopulated.push(val);
-        });
-        console.log(`amount of projects in: ${projectsNotPopulated.length}`);
-        if(projectsNotPopulated.length != 0){
-            let projects: any = [];
-            await projectsNotPopulated.forEach(async function (val: any) {
-                const project = await Project.findOne({'name': val.name}).populate('entries');
-                if(project){
-                    await projects.push(project);
-                    console.log(`added project ${project.name}`);
-                } else{
-                    console.log('*** empty pretty error');
-                }
-            });
-
-            return res.status(200).json(projects);
-        } else {
-            return res.status(404).json();
-        }
+        console.log('*** found user... \n*** indexing projects ...');
+        const projectsNotPopulated = await usr_compr.projectsOwned.concat(usr_compr.projectsParticipants);
+       
+        await console.log(`amount of projects in: ${projectsNotPopulated.length}`);
+        return res.status(200).json(projectsNotPopulated);
     } else {
         console.log('*** no user coincidences');
         return res.status(404).json();
