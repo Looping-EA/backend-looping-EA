@@ -19,14 +19,10 @@ const schema = new Schema({
         type: Schema.Types.ObjectId,
         ref:User
     }],
-    owner: [{
+    owner: {
         type: Schema.Types.ObjectId,
         ref:User
-    }],
-    members:[{
-        type:Schema.Types.ObjectId,
-        ref:User
-    }],
+    },
     entry:[{
         type:Schema.Types.ObjectId,
         ref:Entry
@@ -45,7 +41,6 @@ export interface IProjects extends Document {
     description: String,
     collaboration: IUser['_id'];
     owner: IUser['_id'];
-    members:IUser['_id'];
     entry:IEntry['_id'];
 }
 

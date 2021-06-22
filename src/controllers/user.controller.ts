@@ -23,6 +23,8 @@ export async function createUser(req: Request, res: Response): Promise<Response>
             pswd: pswd,
             email: email,
             fullname: fullname,
+            aboutMe: "",
+            skills: "",
             isAdmin: false,
             photo:""
         }

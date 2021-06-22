@@ -4,7 +4,7 @@ import User from '../models/User';
 import Notification from '../models/Notification';
 
 export async function returnProjects(req:Request, res:Response){
-    let projects = await Project.find().populate('owner').populate('collaboration');
+    let projects = await Project.find().populate('owner').populate('collaboration').populate('entries');
     res.status(201).json(projects);
 }
 
