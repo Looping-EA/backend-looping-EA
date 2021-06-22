@@ -2,13 +2,15 @@
 // entry point for user related stuff
 
 import {Router} from 'express';
-import { makeAdmin, createUser, deleteUser, getUser, logIn, getUsers, findUsersById, updateAboutMe, updateSkills, updateProjects } from '../controllers/user.controller';
+import { recommend, makeAdmin, createUser, deleteUser, getUser, logIn, getUsers, findUsersById, updateAboutMe, updateSkills, updateProjects } from '../controllers/user.controller';
 const jwt = require('jsonwebtoken');
 // Accomodate the routes at user_routes
 const user_router = Router();
 
 user_router.route('/users/login') //API Endpoint for Login a user
     .post(logIn) // Log in the user. READ functions.
+
+user_router.route('/users/recommend').post(recommend)
 
 user_router.route('/users/register') //API Endpoint for Registering a user
     .post(createUser) // CREATE the user JSON object

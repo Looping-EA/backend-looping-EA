@@ -60,11 +60,41 @@ export async function deleteNotif(req:Request, res:Response):Promise<Response>{
         message:"not found"
     });
 }
+export async function recommend(req:Request, res:Response):Promise<Response>{
+    const{user, userRecommended} = req.body;
+    const userRecommended_check = await User.findOne({'uname':userRecommended}).populate('recomendations');
+    const user_check = await User.findOne({'uname':user});
+    if(user_check && userRecommended_check){
+        let i:number = 0;
+        for(i;i<userRecommended_check.recomendations.length;i++){
+            if(userRecommended_check.recomendations[i].uname==user_check.uname){
+                return res.status(403).json({
+                    message:"you already recommended this user"
+                });
+            }
+        }
+        userRecommended_check.recomendations.push(user_check);
+           const notification = new Notification();
+           let notif: string = user+" has recommended you. Congratulations!";
+           notification.message = notif;
+           notification.save();
+           userRecommended_check.notifications.push(notification);
+           userRecommended_check.save();
+        const userRecom_check = await User.findOne({'uname':userRecommended});
+        if(userRecom_check){
+            return res.status(201).json(userRecom_check);
+        }
+
+    }
+    return res.status(404).json({
+        message: "not found"
+    })
+}
 export async function logIn(req:Request, res:Response):Promise<Response>{
     const {uname, pswd} = req.body;
     console.log("log in petition for user ", uname);
     console.log("searching...");
-    const user_compr=await User.findOne({'uname':uname}).populate('projectsOwned').populate('notifications');
+    const user_compr=await User.findOne({'uname':uname}).populate('projectsOwned').populate('notifications').populate('recomendations');
     if(!user_compr){
         console.log("no coincidences found");
         res.status(404);
@@ -92,7 +122,7 @@ export async function getUser(req: Request, res: Response) : Promise <Response>{
 
     console.log("new user search petition for user ", uname);
     console.log("searching...")
-    const user = await User.findOne({'uname': uname}, '-pswd').populate('projectsOwned').populate('notifications');
+    const user = await User.findOne({'uname': uname}, '-pswd').populate('projectsOwned').populate('notifications').populate('recomendations');
 
     if(!user){
         // user does NOT exist
