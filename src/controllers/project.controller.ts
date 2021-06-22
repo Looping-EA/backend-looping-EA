@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import Project from '../models/Project';
 import User from '../models/User';
 import Notification from '../models/Notification';
+
 export async function returnProjects(req:Request, res:Response){
     let projects = await Project.find().populate('owner').populate('collaboration');
     res.status(201).json(projects);
@@ -122,7 +123,7 @@ export async function rejectMember(req:Request, res:Response){
 }
 export async function addProject(req:Request, res:Response){
 
-    const {name, chats, creationDate, tasks, description, collaboration, owner}=req.body;
+    const {name, chats, creationDate, description, collaboration, owner, entry}=req.body;
     const project_compr = await Project.findOne({'name': name});
     const ownerr = await User.findOne({'uname': owner});
     if (!project_compr){
@@ -131,11 +132,10 @@ export async function addProject(req:Request, res:Response){
             name:name,
             chats:chats,
             creationDate:creationDate,
-            tasks:tasks,
             description:description,
             collaboration:collaboration,
             owner:ownerr?.id,
-            entry: []
+            entry:entry
         }
         const project = new Project(newProject);
         await project.save();
