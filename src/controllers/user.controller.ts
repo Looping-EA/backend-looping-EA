@@ -4,6 +4,7 @@ import {Request, Response} from 'express';
 import User from '../models/User';
 import Notification from '../models/Notification';
 import Photo from '../models/Photo';
+import Project from '../models/Project';
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -208,3 +209,34 @@ export async function makeAdmin(req: Request, res:Response): Promise<Response>{
         return res.status(404).json();
     }
 }    
+
+export async function getUserProjects(req: Request, res: Response): Promise<Response>{
+    const uname = req.params.uname;
+    console.log(`*** new petition to get projects from ${uname}`);
+    const usr_compr = await User.findOne({'uname': uname}).populate('projectsOwned').populate('projectsParticipants');
+    if(usr_compr){
+        console.log('*** found user... \n *** indexing projects ...');
+        const projectsNotPopulated = usr_compr.projectsOwned;
+        usr_compr.projectsParticipants.forEach(function (val) {
+            projectsNotPopulated.push(val);
+        });
+
+        if(projectsNotPopulated.length != 0){
+            let projects: any = [];
+            projectsNotPopulated.forEach(async function (val: any) {
+                const project = await Project.findOne({'name': val.name}).populate('entries');
+                if(project)
+                    projects.push(project);
+                else
+                    console.log('*** empty pretty error');
+            });
+
+            return res.status(200).json(projects);
+        } else {
+            return res.status(200).json();
+        }
+    } else {
+        console.log('*** no user coincidences');
+        return res.status(404).json();
+    }
+}
