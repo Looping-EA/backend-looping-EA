@@ -1,7 +1,10 @@
 // User model
 // You can copy this file and modify it to create the other ones
 import {Schema, model, Document} from 'mongoose';
+import Notification, { INotification } from './Notification';
+import Photo, { IPhoto } from './Photo';
 import Project, { IProjects } from './Project';
+import User from './User';
 
 // Create a schema based on discussed
 // user model:
@@ -12,12 +15,12 @@ const schema = new Schema({
     fullname: String,
     isAdmin: Boolean,
     recomendations: [{
-        type: Schema.Types.ObjectId,
-
+        type:Schema.Types.ObjectId,
+        ref: 'User'
     }],
     projectsOwned: [{
-        type: Schema.Types.ObjectId,
-
+        type:Schema.Types.ObjectId,
+        ref: 'Project'
     }],
     projectsParticipants: [{
         type: Schema.Types.ObjectId,
@@ -26,6 +29,11 @@ const schema = new Schema({
     skills: String,
     projects: String,
     strengths: String,
+    photo: String,
+    notifications: [{
+        type:Schema.Types.ObjectId,
+        ref:Notification
+    }],
     weaknesses: String
 });
 
@@ -40,13 +48,15 @@ export interface IUser extends Document {
     email: String;
     fullname: String;
     isAdmin: Boolean;
-    recomendations: Array<any>;
-    projectsOwned: Array<any>;
+    recomendations: IUser['_id'];
+    projectsOwned: IProjects['_id'];
     projectsParticipants: Array<any>;
     aboutMe: String,
     skills: String,
     projects: String,
     strengths: String,
+    photo:String,
+    notifications:INotification['_id'],
     weaknesses: String
 }
 
