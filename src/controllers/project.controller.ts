@@ -120,6 +120,7 @@ export async function rejectMember(req:Request, res:Response){
         message:"project not found"
     });
 }
+
 export async function addProject(req:Request, res:Response){
 
     const {name, chats, creationDate, tasks, description, collaboration, owner}=req.body;
